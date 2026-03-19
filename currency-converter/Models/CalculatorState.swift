@@ -9,6 +9,7 @@ struct CalculatorState {
     }
 
     private(set) var displayText: String = "0"
+    private(set) var expressionText: String = ""
     private var currentValue: Decimal = 0
     private var pendingOperator: Operator?
     private var pendingOperand: Decimal = 0
@@ -25,7 +26,6 @@ struct CalculatorState {
     mutating func inputDigit(_ digit: String) {
         if justCalculated {
             clear()
-            justCalculated = false
         }
 
         if !isEnteringNumber {
@@ -43,7 +43,6 @@ struct CalculatorState {
     mutating func inputDecimal() {
         if justCalculated {
             clear()
-            justCalculated = false
         }
 
         if !isEnteringNumber {
@@ -67,8 +66,10 @@ struct CalculatorState {
             let result = perform(pending, left: pendingOperand, right: value)
             pendingOperand = result
             displayText = formatNumber(result)
+            expressionText = formatNumber(result) + " " + op.rawValue
         } else {
             pendingOperand = value
+            expressionText = displayText + " " + op.rawValue
         }
 
         pendingOperator = op
@@ -81,6 +82,7 @@ struct CalculatorState {
         let value = displayValue
         let result = perform(op, left: pendingOperand, right: value)
 
+        expressionText = formatNumber(pendingOperand) + " " + op.rawValue + " " + displayText
         displayText = formatNumber(result)
         currentValue = result
         pendingOperator = nil
@@ -92,6 +94,7 @@ struct CalculatorState {
 
     mutating func clear() {
         displayText = "0"
+        expressionText = ""
         currentValue = 0
         pendingOperator = nil
         pendingOperand = 0

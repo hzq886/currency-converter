@@ -5,6 +5,7 @@ struct CurrencyRowView: View {
     let amount: Decimal
     let isActive: Bool
     let displayText: String?
+    let expressionText: String?
     let onTapFlag: () -> Void
 
     private var formattedAmount: String {
@@ -39,11 +40,21 @@ struct CurrencyRowView: View {
 
             Spacer()
 
-            Text(isActive ? (displayText ?? "0") : formattedAmount)
-                .font(.system(size: 32, weight: .light, design: .rounded))
-                .foregroundColor(isActive ? AppTheme.textPrimary : AppTheme.textSecondary)
-                .lineLimit(1)
-                .minimumScaleFactor(0.4)
+            VStack(alignment: .trailing, spacing: 2) {
+                if let expression = expressionText, !expression.isEmpty, isActive {
+                    Text(expression)
+                        .font(.system(size: 14, weight: .regular, design: .rounded))
+                        .foregroundColor(AppTheme.textSecondary)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.5)
+                }
+
+                Text(isActive ? (displayText ?? "0") : formattedAmount)
+                    .font(.system(size: 32, weight: .light, design: .rounded))
+                    .foregroundColor(isActive ? AppTheme.textPrimary : AppTheme.textSecondary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.4)
+            }
         }
         .padding(.horizontal, 20)
         .padding(.vertical, 10)

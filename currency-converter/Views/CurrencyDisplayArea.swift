@@ -13,6 +13,8 @@ struct CurrencyDisplayArea: View {
                     isActive: viewModel.activeCurrencyIndex == index,
                     displayText: viewModel.activeCurrencyIndex == index
                         ? viewModel.calculator.displayText : nil,
+                    expressionText: viewModel.activeCurrencyIndex == index
+                        ? viewModel.calculator.expressionText : nil,
                     onTapFlag: {
                         viewModel.openPicker(for: index)
                     }
