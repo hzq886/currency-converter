@@ -9,8 +9,6 @@ struct ContentView: View {
                 .ignoresSafeArea()
 
             VStack(spacing: 0) {
-                Spacer()
-
                 // Currency display area
                 CurrencyDisplayArea(viewModel: viewModel)
                     .padding(.horizontal, 4)
@@ -29,10 +27,10 @@ struct ContentView: View {
                 KeypadView { key in
                     viewModel.onKeyPress(key)
                 }
-                .padding(.top, 16)
+                .padding(.top, 24)
                 .padding(.bottom, 8)
             }
-            .padding(.bottom, 8)
+            .padding(.bottom, 16)
         }
         .preferredColorScheme(.dark)
         .sheet(isPresented: $viewModel.showingPicker) {
