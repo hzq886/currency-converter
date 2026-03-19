@@ -21,6 +21,19 @@ struct CalculatorState {
         Decimal(string: displayText.replacingOccurrences(of: ",", with: "")) ?? 0
     }
 
+    var fullDisplayText: String {
+        if pendingOperator != nil {
+            // Building expression: show "5 × 3" while entering second operand
+            if isEnteringNumber {
+                return expressionText + " " + displayText
+            } else {
+                return expressionText
+            }
+        }
+        // No pending operator: just show the number (result or input)
+        return displayText
+    }
+
     // MARK: - Input
 
     mutating func inputDigit(_ digit: String) {
@@ -82,7 +95,7 @@ struct CalculatorState {
         let value = displayValue
         let result = perform(op, left: pendingOperand, right: value)
 
-        expressionText = formatNumber(pendingOperand) + " " + op.rawValue + " " + displayText
+        expressionText = ""
         displayText = formatNumber(result)
         currentValue = result
         pendingOperator = nil
