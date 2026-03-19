@@ -13,7 +13,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "通貨変換"
+            "value" : "為替レート"
           }
         }
       }
