@@ -13,8 +13,8 @@ enum AppTheme {
     static let divider = Color(white: 0.2)
 
     // MARK: - Dimensions
-    static let keypadButtonSize: CGFloat = 68
-    static let keypadSpacing: CGFloat = 14
+    static let keypadButtonSize: CGFloat = 76
+    static let keypadSpacing: CGFloat = 16
     static let flagSize: CGFloat = 36
     static let cornerRadius: CGFloat = 16
 }
