@@ -12,7 +12,7 @@ struct CurrencyDisplayArea: View {
                     amount: viewModel.amounts[index],
                     isActive: viewModel.activeCurrencyIndex == index,
                     displayText: viewModel.activeCurrencyIndex == index
-                        ? viewModel.calculator.displayText : nil,
+                        ? viewModel.calculator.fullDisplayText : nil,
                     onTapFlag: {
                         viewModel.openPicker(for: index)
                     }
