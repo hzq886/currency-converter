@@ -40,13 +40,13 @@ struct CurrencyRowView: View {
             Spacer()
 
             Text(isActive ? (displayText ?? "0") : formattedAmount)
-                .font(.system(size: 32, weight: .light, design: .rounded))
+                .font(.system(size: 38, weight: .light, design: .rounded))
                 .foregroundColor(isActive ? AppTheme.textPrimary : AppTheme.textSecondary)
                 .lineLimit(1)
                 .minimumScaleFactor(0.4)
         }
         .padding(.horizontal, 20)
-        .padding(.vertical, 10)
+        .padding(.vertical, 16)
         .background(
             RoundedRectangle(cornerRadius: AppTheme.cornerRadius)
                 .fill(isActive ? AppTheme.cardBackground : Color.clear)
