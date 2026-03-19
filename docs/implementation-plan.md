@@ -85,13 +85,19 @@ currency-converter/
 
 | プロパティ | 型 | 説明 |
 |-----------|-----|------|
-| `displayText` | `String` | 現在の表示テキスト |
+| `displayText` | `String` | 現在の数値表示テキスト |
+| `expressionText` | `String` | 計算式テキスト（例: "5 ×"） |
 | `currentValue` | `Decimal` | 内部計算値 |
 | `pendingOperator` | `Operator?` | 保留中の演算子 |
 | `pendingOperand` | `Decimal` | 保留中のオペランド |
 | `isEnteringNumber` | `Bool` | 数値入力中フラグ |
 | `hasDecimalPoint` | `Bool` | 小数点入力済みフラグ |
 | `justCalculated` | `Bool` | 計算直後フラグ |
+
+| 算出プロパティ | 型 | 説明 |
+|---------------|-----|------|
+| `displayValue` | `Decimal` | displayTextの数値表現 |
+| `fullDisplayText` | `String` | UI表示用テキスト（式+入力中の数値、または結果のみ） |
 
 対応演算子: `+`, `-`, `×`, `÷`
 
@@ -154,7 +160,7 @@ AUD (オーストラリアドル), NZD (ニュージーランドドル)
 ┌──────────────────────────┐
 │   通貨表示エリア           │  CurrencyDisplayArea
 │  ┌──────────────────────┐│
-│  │ 🇯🇵 JPY    ¥1,000.00 ││  CurrencyRowView (active)
+│  │ 🇯🇵 JPY  500 × 2,000 ││  CurrencyRowView (active, 式表示)
 │  │ 🇨🇳 CNY      ¥48.52  ││  CurrencyRowView
 │  │ 🇺🇸 USD       $6.85  ││  CurrencyRowView
 │  └──────────────────────┘│
@@ -189,11 +195,11 @@ AUD (オーストラリアドル), NZD (ニュージーランドドル)
 
 | 寸法 | 値 |
 |------|-----|
-| キーパッドボタンサイズ | 68pt (円形) |
-| キーパッド間隔 | 14pt |
+| キーパッドボタンサイズ | 76pt (円形) |
+| キーパッド間隔 | 16pt |
 | 国旗サイズ | 36pt (円形マスク) |
 | 角丸半径 | 16pt |
-| 金額フォント | 32pt ライトラウンド |
+| 金額フォント | 38pt ライトラウンド |
 | ボタンフォント | 22pt セミボールドラウンド |
 
 ### 6.3 通貨選択画面 (CurrencyPickerView)
@@ -217,6 +223,7 @@ AUD (オーストラリアドル), NZD (ニュージーランドドル)
 
 ### 7.1 電卓スタイル入力
 - 四則演算 (加算・減算・乗算・除算)
+- 計算式のインライン表示（例: "5 × 5"、イコール押下で結果のみ表示）
 - 小数点入力対応
 - バックスペース・全クリア
 - 符号切替 (+/-)
