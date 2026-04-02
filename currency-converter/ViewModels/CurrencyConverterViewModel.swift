@@ -6,7 +6,7 @@ enum KeypadKey: Hashable, Sendable {
     case decimal
     case clear
     case backspace
-    case toggleSign
+    case doubleZero
     case swap
     case add, subtract, multiply, divide, equals
 
@@ -16,7 +16,7 @@ enum KeypadKey: Hashable, Sendable {
         case .decimal: return "."
         case .clear: return "C"
         case .backspace: return "←"
-        case .toggleSign: return "+/−"
+        case .doubleZero: return "00"
         case .swap: return "↑↓"
         case .add: return "+"
         case .subtract: return "−"
@@ -110,8 +110,9 @@ class CurrencyConverterViewModel {
             calculator.clear()
         case .backspace:
             calculator.backspace()
-        case .toggleSign:
-            calculator.toggleSign()
+        case .doubleZero:
+            calculator.inputDigit("0")
+            calculator.inputDigit("0")
         case .swap:
             swapCurrencies()
         case .add:
