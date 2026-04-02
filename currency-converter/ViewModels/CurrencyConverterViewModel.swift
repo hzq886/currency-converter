@@ -170,30 +170,6 @@ class CurrencyConverterViewModel {
         }
     }
 
-    func moveCurrency(from source: Int, to destination: Int) {
-        guard source != destination,
-              source >= 0, source < selectedCurrencies.count,
-              destination >= 0, destination < selectedCurrencies.count else { return }
-
-        let currency = selectedCurrencies.remove(at: source)
-        selectedCurrencies.insert(currency, at: destination)
-
-        let amount = amounts.remove(at: source)
-        amounts.insert(amount, at: destination)
-
-        if activeCurrencyIndex == source {
-            activeCurrencyIndex = destination
-        } else if source < destination {
-            if activeCurrencyIndex > source && activeCurrencyIndex <= destination {
-                activeCurrencyIndex -= 1
-            }
-        } else {
-            if activeCurrencyIndex >= destination && activeCurrencyIndex < source {
-                activeCurrencyIndex += 1
-            }
-        }
-    }
-
     func setActiveCurrency(_ index: Int) {
         guard index != activeCurrencyIndex else { return }
         activeCurrencyIndex = index
