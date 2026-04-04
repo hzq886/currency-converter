@@ -8,7 +8,7 @@ This is a native iOS SwiftUI app using an Xcode project (not SPM). No test targe
 
 ```bash
 # Build for simulator
-xcodebuild -project currency-converter.xcodeproj -scheme currency-converter -destination 'platform=iOS Simulator,name=iPhone 16' build
+xcodebuild -project currency-converter.xcodeproj -scheme currency-converter -destination 'platform=iOS Simulator,name=iPhone 17 Pro' build
 
 # Open in Xcode (preferred for day-to-day development)
 open currency-converter.xcodeproj
