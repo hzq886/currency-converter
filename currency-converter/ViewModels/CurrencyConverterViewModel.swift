@@ -178,8 +178,8 @@ class CurrencyConverterViewModel {
         let currentAmount = amounts[index]
         if currentAmount != 0 {
             calculator = CalculatorState()
-            let formatted = calculator.formatNumber(currentAmount)
-            // Re-enter the converted amount as the starting point
+            // Use the same 2-decimal formatting as the display to avoid precision changes
+            let formatted = formatDisplayAmount(currentAmount)
             for char in formatted where char != "," {
                 if char == "." {
                     calculator.inputDecimal()
@@ -218,6 +218,19 @@ class CurrencyConverterViewModel {
     }
 
     // MARK: - Helpers
+
+    private func formatDisplayAmount(_ value: Decimal) -> String {
+        let doubleVal = NSDecimalNumber(decimal: value).doubleValue
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.groupingSeparator = ","
+        formatter.maximumFractionDigits = 2
+        formatter.minimumFractionDigits = 0
+        if abs(doubleVal) > 0 && abs(doubleVal) < 0.01 {
+            formatter.maximumFractionDigits = 6
+        }
+        return formatter.string(from: NSNumber(value: doubleVal)) ?? "0"
+    }
 
     private func formatRate(_ rate: Double) -> String {
         String(format: "%.2f", rate)
