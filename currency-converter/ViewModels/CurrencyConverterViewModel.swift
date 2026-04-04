@@ -7,7 +7,7 @@ enum KeypadKey: Hashable, Sendable {
     case clear
     case backspace
     case doubleZero
-    case swap
+    case moveDown
     case add, subtract, multiply, divide, equals
 
     var displayLabel: String {
@@ -17,7 +17,7 @@ enum KeypadKey: Hashable, Sendable {
         case .clear: return "C"
         case .backspace: return "←"
         case .doubleZero: return "00"
-        case .swap: return "↑↓"
+        case .moveDown: return "↓"
         case .add: return "+"
         case .subtract: return "−"
         case .multiply: return "×"
@@ -108,8 +108,8 @@ class CurrencyConverterViewModel {
         case .doubleZero:
             calculator.inputDigit("0")
             calculator.inputDigit("0")
-        case .swap:
-            swapCurrencies()
+        case .moveDown:
+            moveActiveCurrencyDown()
         case .add:
             calculator.inputOperator(.add)
         case .subtract:
@@ -153,14 +153,20 @@ class CurrencyConverterViewModel {
         }
     }
 
-    func swapCurrencies() {
-        guard selectedCurrencies.count >= 2 else { return }
-        selectedCurrencies.swapAt(0, 1)
-        amounts.swapAt(0, 1)
+    func moveActiveCurrencyDown() {
+        let count = selectedCurrencies.count
+        guard count >= 2 else { return }
+        let i = activeCurrencyIndex
 
-        if activeCurrencyIndex == 0 {
-            activeCurrencyIndex = 1
-        } else if activeCurrencyIndex == 1 {
+        if i < count - 1 {
+            selectedCurrencies.swapAt(i, i + 1)
+            amounts.swapAt(i, i + 1)
+            activeCurrencyIndex = i + 1
+        } else {
+            let currency = selectedCurrencies.remove(at: i)
+            selectedCurrencies.insert(currency, at: 0)
+            let amount = amounts.remove(at: i)
+            amounts.insert(amount, at: 0)
             activeCurrencyIndex = 0
         }
     }

@@ -4,7 +4,7 @@ struct KeypadView: View {
     let onKey: (KeypadKey) -> Void
 
     private let rows: [[KeypadKey]] = [
-        [.clear, .backspace, .swap, .divide],
+        [.clear, .backspace, .moveDown, .divide],
         [.digit("7"), .digit("8"), .digit("9"), .multiply],
         [.digit("4"), .digit("5"), .digit("6"), .subtract],
         [.digit("1"), .digit("2"), .digit("3"), .add],
