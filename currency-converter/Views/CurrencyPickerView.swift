@@ -6,12 +6,16 @@ struct CurrencyPickerView: View {
     @Environment(\.dismiss) private var dismiss
 
     private var displayedCurrencies: [CurrencyInfo] {
+        let selectedCodes = Set(viewModel.selectedCurrencies.map { $0.code })
+
+        let base = CurrencyInfo.allCurrencies.filter { !selectedCodes.contains($0.code) }
+
         if searchText.isEmpty {
-            return CurrencyInfo.allCurrencies
+            return base
         }
 
         let query = searchText.lowercased()
-        return CurrencyInfo.allCurrencies.filter {
+        return base.filter {
             $0.code.lowercased().contains(query) ||
             $0.name.lowercased().contains(query) ||
             $0.localizedName.contains(query)
@@ -55,17 +59,7 @@ struct CurrencyPickerView: View {
             .navigationTitle("通貨")
             .navigationBarTitleDisplayMode(.inline)
             .toolbarColorScheme(.dark, for: .navigationBar)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button {
-                        dismiss()
-                    } label: {
-                        Image(systemName: "chevron.left")
-                            .foregroundColor(AppTheme.accent)
-                    }
-                }
-
-            }
+            .toolbar {}
         }
         .preferredColorScheme(.dark)
     }
