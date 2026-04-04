@@ -40,3 +40,8 @@ SwiftUI Views (stateless presenters)
 - **Flags**: loaded asynchronously from `flagcdn.com` via `AsyncImage`.
 - **Concurrency**: `@MainActor` default actor isolation (`SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor` in build settings). The rate service uses a Swift Actor for thread safety.
 - **25 currencies** across 5 regions defined in `Currency.swift`. Default selection: JPY, CNY, USD.
+
+## Git Workflow
+
+- **新功能**：从 `main` 新建 `feature/<功能名>` 分支后开发，完成后提 PR 合并回 `main`。
+- **Bug 修复**：从 `main` 新建 `fix/<问题描述>` 分支后修复，完成后提 PR 合并回 `main`。
