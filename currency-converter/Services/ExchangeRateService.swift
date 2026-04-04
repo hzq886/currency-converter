@@ -2,13 +2,14 @@ import Foundation
 
 actor ExchangeRateService {
     private var cachedRates: [String: Double]?
-    private var cachedTimestamp: Date?
+    private var cachedFetchedAt: Date?
+    private var cachedAPITimestamp: Date?
     private let cacheDuration: TimeInterval = 300 // 5 minutes
 
     func fetchRates(base: String = "USD") async throws -> (rates: [String: Double], timestamp: Date) {
-        if let cached = cachedRates, let ts = cachedTimestamp,
-           Date().timeIntervalSince(ts) < cacheDuration {
-            return (cached, ts)
+        if let cached = cachedRates, let fetchedAt = cachedFetchedAt, let apiTimestamp = cachedAPITimestamp,
+           Date().timeIntervalSince(fetchedAt) < cacheDuration {
+            return (cached, apiTimestamp)
         }
 
         let url = URL(string: "https://open.er-api.com/v6/latest/\(base)")!
@@ -21,14 +22,16 @@ actor ExchangeRateService {
 
         let timestamp = Date(timeIntervalSince1970: TimeInterval(response.timeLastUpdateUnix))
         cachedRates = response.rates
-        cachedTimestamp = Date()
+        cachedFetchedAt = Date()
+        cachedAPITimestamp = timestamp
 
         return (response.rates, timestamp)
     }
 
     func invalidateCache() {
         cachedRates = nil
-        cachedTimestamp = nil
+        cachedFetchedAt = nil
+        cachedAPITimestamp = nil
     }
 }
 
