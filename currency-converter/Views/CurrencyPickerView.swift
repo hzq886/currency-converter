@@ -3,24 +3,15 @@ import SwiftUI
 struct CurrencyPickerView: View {
     @Bindable var viewModel: CurrencyConverterViewModel
     @State private var searchText = ""
-    @State private var showAllRegions = false
     @Environment(\.dismiss) private var dismiss
 
-    private var defaultRegions: [CurrencyRegion] {
-        [.asia, .westernEurope, .northAmerica, .oceania]
-    }
-
     private var displayedCurrencies: [CurrencyInfo] {
-        let base = showAllRegions
-            ? CurrencyInfo.allCurrencies
-            : CurrencyInfo.allCurrencies.filter { defaultRegions.contains($0.region) }
-
         if searchText.isEmpty {
-            return base
+            return CurrencyInfo.allCurrencies
         }
 
         let query = searchText.lowercased()
-        return base.filter {
+        return CurrencyInfo.allCurrencies.filter {
             $0.code.lowercased().contains(query) ||
             $0.name.lowercased().contains(query) ||
             $0.localizedName.contains(query)
@@ -28,11 +19,7 @@ struct CurrencyPickerView: View {
     }
 
     private var groupedCurrencies: [(region: CurrencyRegion, currencies: [CurrencyInfo])] {
-        let regions = showAllRegions
-            ? CurrencyRegion.allCases
-            : defaultRegions
-
-        return regions.compactMap { region in
+        CurrencyRegion.allCases.compactMap { region in
             let currencies = displayedCurrencies.filter { $0.region == region }
             return currencies.isEmpty ? nil : (region, currencies)
         }
@@ -78,16 +65,6 @@ struct CurrencyPickerView: View {
                     }
                 }
 
-                ToolbarItem(placement: .primaryAction) {
-                    Button {
-                        withAnimation {
-                            showAllRegions.toggle()
-                        }
-                    } label: {
-                        Image(systemName: showAllRegions ? "minus.circle" : "plus.circle")
-                            .foregroundColor(AppTheme.accent)
-                    }
-                }
             }
         }
         .preferredColorScheme(.dark)
