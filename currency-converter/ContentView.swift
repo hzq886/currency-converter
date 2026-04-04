@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var viewModel = CurrencyConverterViewModel()
+    @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
         ZStack {
@@ -38,6 +39,13 @@ struct ContentView: View {
         }
         .task {
             await viewModel.fetchRates()
+        }
+        .onChange(of: scenePhase) { _, newPhase in
+            if newPhase == .active {
+                Task {
+                    await viewModel.fetchRates()
+                }
+            }
         }
     }
 }

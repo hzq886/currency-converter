@@ -47,7 +47,6 @@ class CurrencyConverterViewModel {
 
     var rates: [String: Double] = [:]
     var rateLastUpdated: Date?
-    var isLoadingRates: Bool = false
     var rateError: String?
 
     var showingPicker: Bool = false
@@ -60,24 +59,20 @@ class CurrencyConverterViewModel {
     // MARK: - Computed
 
     var rateInfoText: String {
-        guard !rates.isEmpty else { return "Loading rates..." }
+        guard !rates.isEmpty, selectedCurrencies.count >= 3 else { return "Loading rates..." }
 
-        let base = "USD"
-        let parts: [String] = selectedCurrencies.compactMap { currency in
-            guard currency.code != base,
-                  let rate = rates[currency.code] else { return nil }
-            let formatted = formatRate(rate)
-            return "1 \(base) = \(formatted) \(currency.code)"
+        let first = selectedCurrencies[0]
+        let others = [selectedCurrencies[1], selectedCurrencies[2]]
+
+        guard let firstRate = rates[first.code] else { return "Loading rates..." }
+
+        let parts: [String] = others.compactMap { currency in
+            guard let targetRate = rates[currency.code] else { return nil }
+            let rate = targetRate / firstRate
+            return "1 \(first.code) = \(formatRate(rate)) \(currency.code)"
         }
 
-        if parts.isEmpty {
-            // All selected are USD, show EUR as reference
-            if let eurRate = rates["EUR"] {
-                return "1 USD = \(formatRate(eurRate)) EUR"
-            }
-        }
-
-        return parts.joined(separator: "  ")
+        return parts.joined(separator: " | ")
     }
 
     var timeAgoText: String {
@@ -204,7 +199,6 @@ class CurrencyConverterViewModel {
     // MARK: - Networking
 
     func fetchRates() async {
-        isLoadingRates = true
         rateError = nil
 
         do {
@@ -215,24 +209,11 @@ class CurrencyConverterViewModel {
         } catch {
             rateError = error.localizedDescription
         }
-
-        isLoadingRates = false
-    }
-
-    func refreshRates() async {
-        await rateService.invalidateCache()
-        await fetchRates()
     }
 
     // MARK: - Helpers
 
     private func formatRate(_ rate: Double) -> String {
-        if rate >= 100 {
-            return String(format: "%.2f", rate)
-        } else if rate >= 1 {
-            return String(format: "%.4f", rate)
-        } else {
-            return String(format: "%.6f", rate)
-        }
+        String(format: "%.2f", rate)
     }
 }
