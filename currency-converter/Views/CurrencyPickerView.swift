@@ -62,7 +62,7 @@ struct CurrencyPickerView: View {
             .toolbar {}
         }
         .preferredColorScheme(.dark)
-        .presentationDetents([.large])
+        .presentationDetents([.fraction(0.7)])
         .presentationCornerRadius(20)
         .presentationBackground(AppTheme.cardBackground)
         .presentationDragIndicator(.visible)
