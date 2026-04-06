@@ -38,10 +38,15 @@ enum KeypadKey: Hashable, Sendable {
 
 @Observable
 class CurrencyConverterViewModel {
+    // MARK: - Persistence Keys
+
+    private static let selectedCurrenciesKey = "selectedCurrencies"
+    private static let activeCurrencyIndexKey = "activeCurrencyIndex"
+
     // MARK: - State
 
-    var selectedCurrencies: [CurrencyInfo] = CurrencyInfo.defaultCurrencies
-    var activeCurrencyIndex: Int = 0
+    var selectedCurrencies: [CurrencyInfo]
+    var activeCurrencyIndex: Int
     var calculator = CalculatorState()
     var amounts: [Decimal] = [0, 0, 0]
 
@@ -55,6 +60,32 @@ class CurrencyConverterViewModel {
     var showingAddCurrency: Bool = false
 
     private let rateService = ExchangeRateService()
+
+    // MARK: - Init
+
+    init() {
+        if let data = UserDefaults.standard.data(forKey: Self.selectedCurrenciesKey),
+           let saved = try? JSONDecoder().decode([CurrencyInfo].self, from: data),
+           !saved.isEmpty {
+            selectedCurrencies = saved
+            amounts = Array(repeating: 0, count: saved.count)
+        } else {
+            selectedCurrencies = CurrencyInfo.defaultCurrencies
+        }
+        activeCurrencyIndex = UserDefaults.standard.integer(forKey: Self.activeCurrencyIndexKey)
+        if activeCurrencyIndex >= selectedCurrencies.count {
+            activeCurrencyIndex = 0
+        }
+    }
+
+    // MARK: - Persistence
+
+    private func saveCurrencies() {
+        if let data = try? JSONEncoder().encode(selectedCurrencies) {
+            UserDefaults.standard.set(data, forKey: Self.selectedCurrenciesKey)
+        }
+        UserDefaults.standard.set(activeCurrencyIndex, forKey: Self.activeCurrencyIndexKey)
+    }
 
     // MARK: - Computed
 
@@ -169,6 +200,7 @@ class CurrencyConverterViewModel {
             amounts.insert(amount, at: 0)
             activeCurrencyIndex = 0
         }
+        saveCurrencies()
     }
 
     func setActiveCurrency(_ index: Int) {
@@ -188,6 +220,7 @@ class CurrencyConverterViewModel {
                 }
             }
         }
+        saveCurrencies()
     }
 
     func selectCurrency(_ currency: CurrencyInfo, for index: Int) {
@@ -195,6 +228,7 @@ class CurrencyConverterViewModel {
         selectedCurrencies[index] = currency
         showingPicker = false
         updateConversions()
+        saveCurrencies()
     }
 
     func openPicker(for index: Int) {
