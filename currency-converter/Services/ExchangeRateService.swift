@@ -24,11 +24,13 @@ actor ExchangeRateService {
         let formatter = ISO8601DateFormatter()
         formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
         let timestamp = formatter.date(from: decoded.timestamp) ?? Date()
-        cachedRates = decoded.rates
+        var rates = decoded.rates.compactMapValues { $0 }
+        rates[base.uppercased()] = 1.0
+        cachedRates = rates
         cachedFetchedAt = Date()
         cachedAPITimestamp = timestamp
 
-        return (decoded.rates, timestamp)
+        return (cachedRates!, timestamp)
     }
 
     func invalidateCache() {
