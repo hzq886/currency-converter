@@ -32,7 +32,7 @@ struct CurrencyPickerView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                AppTheme.background.ignoresSafeArea()
+                Color.clear.ignoresSafeArea()
 
                 List {
                     ForEach(groupedCurrencies, id: \.region) { group in
@@ -62,6 +62,10 @@ struct CurrencyPickerView: View {
             .toolbar {}
         }
         .preferredColorScheme(.dark)
+        .presentationDetents([.large])
+        .presentationCornerRadius(20)
+        .presentationBackground(AppTheme.cardBackground)
+        .presentationDragIndicator(.visible)
     }
 
     private func currencyRow(_ currency: CurrencyInfo) -> some View {
