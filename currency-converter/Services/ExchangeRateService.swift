@@ -12,20 +12,23 @@ actor ExchangeRateService {
             return (cached, apiTimestamp)
         }
 
-        let url = URL(string: "https://open.er-api.com/v6/latest/\(base)")!
-        let (data, _) = try await URLSession.shared.data(from: url)
-        let response = try JSONDecoder().decode(ExchangeRateResponse.self, from: data)
+        let url = URL(string: "https://fxapi.app/api/\(base.lowercased()).json")!
+        let (data, response) = try await URLSession.shared.data(from: url)
 
-        guard response.result == "success" else {
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
             throw ExchangeRateError.apiFailed
         }
 
-        let timestamp = Date(timeIntervalSince1970: TimeInterval(response.timeLastUpdateUnix))
-        cachedRates = response.rates
+        let decoded = try JSONDecoder().decode(ExchangeRateResponse.self, from: data)
+
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        let timestamp = formatter.date(from: decoded.timestamp) ?? Date()
+        cachedRates = decoded.rates
         cachedFetchedAt = Date()
         cachedAPITimestamp = timestamp
 
-        return (response.rates, timestamp)
+        return (decoded.rates, timestamp)
     }
 
     func invalidateCache() {
