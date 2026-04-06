@@ -45,3 +45,5 @@ SwiftUI Views (stateless presenters)
 
 - **新功能**：从 `main` 新建 `feature/<功能名>` 分支后开发，完成后提 PR 合并回 `main`。
 - **Bug 修复**：从 `main` 新建 `fix/<问题描述>` 分支后修复，完成后提 PR 合并回 `main`。
+- **GitHub CLI**: `gh` 位于 `/opt/homebrew/bin/gh`，用于创建 PR 等 GitHub 操作。
+- **分支清理**：PR 合并后删除对应的 feature/fix 分支。
